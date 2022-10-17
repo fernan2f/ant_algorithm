@@ -1,5 +1,6 @@
 import numpy as np 
 import sys
+import math
 
 # py .\main.py berlin52.txt 10 10 100 0.1 2.5 0.9
 
@@ -20,5 +21,7 @@ coordenadas = np.genfromtxt(archivo_entrada,delimiter=" ",skip_footer=1,skip_hea
 Distancia = np.zeros((coordenadas.shape[0],coordenadas.shape[0]))
 Heuristica = np.copy(Distancia)
 
-print(list(coordenadas.shape))
+for i in range(0,len(Distancia)):
+   for j in range(0,len(Distancia)):
+      distancia = math.sqrt()
 
