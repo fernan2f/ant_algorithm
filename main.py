@@ -56,6 +56,7 @@ numCiudades = coordenadas.shape[0]
 
 
 Distancia = np.full((coordenadas.shape[0],coordenadas.shape[0]),-1,dtype=float)
+
 #print(Distancia)
 for i in range(0,len(Distancia)):
    for j in range(i+1,len(Distancia)):
@@ -64,13 +65,14 @@ for i in range(0,len(Distancia)):
       Distancia[j][i] = distancia 
 
 Heuristica = np.full_like(Distancia,fill_value=1/Distancia,dtype=float)
+np.fill_diagonal(Heuristica,0)
 solucionMejor = np.arange(0,coordenadas.shape[0])
 np.random.shuffle(solucionMejor)
 solucionMejorCosto = solucionCalculaCosto(numCiudades,solucionMejor,Distancia)
 Tij0 = 1/(numCiudades*solucionMejorCosto)
 matrizFeromona = np.full_like(Distancia,fill_value=Tij0,dtype=float)
-print(matrizFeromona)
-print(Heuristica)
+# print(matrizFeromona)
+# print(Heuristica)
 print(solucionMejorCosto)
 
 
@@ -78,13 +80,16 @@ num_iteraciones = 0
 while num_iteraciones < iteraciones or solucionMejorCosto == 7544.3659:
    trayectoriahormiga,ciudadesVisitadas = visitaInicial(hormigas_size,numCiudades)
    print(ciudadesVisitadas)
-   for i in range(0,numCiudades -1 ):
+   for i in range(0,numCiudades-1 ):
       for j in range(0,hormigas_size):
          prob_ecuacion_1 = random_0_to_1()
+         TxN = ciudadesVisitadas[j] * matrizFeromona[j] * Heuristica[j]**peso_heuristica
          if (prob_ecuacion_1 < prob_limite):
-            sum = np.array()
-         else:
-            j0 = np.random.choice()
+            indexVisited = np.random.choice(np.where(TxN == np.amax(TxN))[0])
+            ciudadesVisitadas[indexVisited] = 0
+
+         # else:
+         #    j0 = np.random.choice()
    num_iteraciones = num_iteraciones + 1
 
    
