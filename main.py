@@ -86,9 +86,17 @@ while num_iteraciones < iteraciones or solucionMejorCosto == 7544.3659:
          TxN = ciudadesVisitadas[j] * matrizFeromona[j] * Heuristica[j]**peso_heuristica
          if (prob_ecuacion_1 < prob_limite):
             indexVisited = np.random.choice(np.where(TxN == np.amax(TxN))[0])
-            ciudadesVisitadas[indexVisited] = 0
+            ciudadesVisitadas[j][indexVisited] = 0
 
-         # else:
+         else:
+            ciudadesRestantes = ciudadesVisitadas[j]
+            if(ciudadesRestantes[np.where(ciudadesRestantes == 1)].size > 0):
+               # falta ruleta    
+               j0 = matrizFeromona[j] * Heuristica[j]**peso_heuristica/np.sum(TxN)
+               ciudadesVisitadas[j][j0] = 0
+            else:
+               j0 = 0
+            
          #    j0 = np.random.choice()
    num_iteraciones = num_iteraciones + 1
 
