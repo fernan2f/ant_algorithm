@@ -22,6 +22,23 @@ def visitaInicial(hormigas_size,numVariables):
       ciudadesVisitadas = RegistroCiudad(i,ciudad,ciudadesVisitadas)
    return trayectoriahormiga,ciudadesVisitadas
 
+#Calcula la probabilidad que tiene un individuo en el torneo
+def arrayTorneo(arrayFitness,numCiudades):
+    arrayTorneo = np.empty(numCiudades)
+    acc = 0
+    for i in range(0,numCiudades):
+        acc = acc + arrayFitness[i]
+        arrayTorneo[i] = acc
+    return arrayTorneo
+
+
+#Se obtiene el indice de un individuo de la poblacion randomicamente segun la probabilidad de cruza
+def getIndexTorneo(random, arrayProbCruza):
+    for i in range(0, numCiudades):
+        if random <= arrayProbCruza[i]:
+            return i
+
+
 #def TxN(heuristica,Feromona,CiudadesVisitadas):
 
 
@@ -73,13 +90,13 @@ Tij0 = 1/(numCiudades*solucionMejorCosto)
 matrizFeromona = np.full_like(Distancia,fill_value=Tij0,dtype=float)
 # print(matrizFeromona)
 # print(Heuristica)
-print(solucionMejorCosto)
+#print(solucionMejorCosto)
 
 
 num_iteraciones = 0
 while num_iteraciones < iteraciones or solucionMejorCosto == 7544.3659:
    trayectoriahormiga,ciudadesVisitadas = visitaInicial(hormigas_size,numCiudades)
-   print(ciudadesVisitadas)
+   #print(ciudadesVisitadas)
    for i in range(0,numCiudades-1 ):
       for j in range(0,hormigas_size):
          prob_ecuacion_1 = random_0_to_1()
@@ -91,9 +108,15 @@ while num_iteraciones < iteraciones or solucionMejorCosto == 7544.3659:
          else:
             ciudadesRestantes = ciudadesVisitadas[j]
             if(ciudadesRestantes[np.where(ciudadesRestantes == 1)].size > 0):
-               # falta ruleta    
-               j0 = matrizFeromona[j] * Heuristica[j]**peso_heuristica/np.sum(TxN)
-               ciudadesVisitadas[j][j0] = 0
+              
+               j0 = (TxN)/np.sum(TxN)
+               arrayTorneos = arrayTorneo(j0,numCiudades)
+               print(j0)
+               print(arrayTorneos)
+               random = random_0_to_1()
+               indexTorneo = getIndexTorneo(random, arrayTorneos)
+               ciudadesVisitadas[j][indexTorneo] = 0
+              
             else:
                j0 = 0
             
