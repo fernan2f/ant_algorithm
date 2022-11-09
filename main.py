@@ -103,38 +103,45 @@ while num_iteraciones < iteraciones or solucionMejorCosto == 7544.3659:
          
          prob_ecuacion_1 = random_0_to_1()
          TxN = ciudadesVisitadas[j] * matrizFeromona[j] * Heuristica[j]**peso_heuristica
-         indexVisitado = 0
+         indexVisitado = 0   
          if (prob_ecuacion_1 < prob_limite):
             indexVisitado = np.random.choice(np.where(TxN == np.amax(TxN))[0])
             ciudadesVisitadas[j][indexVisitado] = 0
             trayectoriahormiga[j][i+1] = indexVisitado
          else:
             ciudadesRestantes = ciudadesVisitadas[j]
-            if(ciudadesRestantes[np.where(ciudadesRestantes == 1)].size > 0):
+            if(ciudadesRestantes[np.where(ciudadesRestantes == 1)].size > 0 and np.sum(TxN) > 0):
+               # print("Ciudades visit", ciudadesVisitadas[j])
+               # print("TXN")
+               # print(TxN)
                j0 = (TxN)/np.sum(TxN)
-               print("TXN")
-               print(TxN)
-               print("j0")
-               print(j0)
+               # print("j0")
+               # print(j0)
                arrayTorneos = arrayTorneo(j0,numCiudades)
-               trayectoriahormiga[j][i+1] = indexVisitado
                # print(j0)
                # print(arrayTorneos)
                random = random_0_to_1()
                indexVisitado = getIndexTorneo(random, arrayTorneos)
+               trayectoriahormiga[j][i+1] = indexVisitado
                ciudadesVisitadas[j][indexVisitado] = 0   
-      #    matrizFeromona[j][indexVisitado] = (1-factor_feromona)*matrizFeromona[j][indexVisitado] + factor_feromona * Tij0
-      #    matrizFeromona[indexVisitado][j] = matrizFeromona[j][indexVisitado]
-      # matrizFeromona[j][-1] = (1-factor_feromona)*matrizFeromona[j][indexVisitado] + factor_feromona * Tij0
-      # matrizFeromona[j][0] = (1-factor_feromona)*matrizFeromona[j][indexVisitado] + factor_feromona * Tij0
+            elif(ciudadesRestantes[np.where(ciudadesRestantes == 1)].size > 0):
+               indexVisitado = np.where(ciudadesRestantes==1)[0][0]
+               trayectoriahormiga[j][i+1] = indexVisitado
+               ciudadesVisitadas[j][indexVisitado] = 0   
+         matrizFeromona[j][indexVisitado] = (1-factor_feromona)*matrizFeromona[j][indexVisitado] + factor_feromona * Tij0
+         matrizFeromona[indexVisitado][j] = matrizFeromona[j][indexVisitado]       
+      matrizFeromona[j][-1] = (1-factor_feromona)*matrizFeromona[j][indexVisitado] + factor_feromona * Tij0
+      matrizFeromona[j][0] = (1-factor_feromona)*matrizFeromona[j][indexVisitado] + factor_feromona * Tij0
+      
             
-            
-   num_iteraciones = num_iteraciones + 1
+      
+   num_iteraciones += 1
 
    
 
-#  print(ciudadvisitada)
 
+#  print(ciudadvisitada)
+   print(matrizFeromona)
 
 
 
