@@ -147,6 +147,7 @@ while num_iteraciones < iteraciones or solucionMejorCosto == 7544.3659:
   
    for l in (solucionMejor):
       matrizFeromona[index_mejor_solucion][l] = (1-factor_feromona)*matrizFeromona[index_mejor_solucion][l] + factor_feromona * (1/solucionMejorCosto)
+      matrizFeromona[l][index_mejor_solucion] = matrizFeromona[index_mejor_solucion][l]
 
    num_iteraciones += 1
    print("mejor ", solucionMejorCosto , " i ", num_iteraciones)
