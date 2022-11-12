@@ -59,9 +59,9 @@ def getIndexTorneo(random, arrayProbCruza):
 #    exit()
 
 archivo_entrada = 'berlin.txt'
-seed = 10
-hormigas_size = 10
-iteraciones = 100
+seed = 7
+hormigas_size = 50
+iteraciones = 1000
 factor_feromona = 0.1
 peso_heuristica =  2.5
 prob_limite = 0.9 #q_0
@@ -83,6 +83,7 @@ numCiudades = coordenadas.shape[0]
 
 Distancia = np.full((coordenadas.shape[0],coordenadas.shape[0]),-1,dtype=float)
 
+
 #print(Distancia)
 for i in range(0,len(Distancia)):
    for j in range(i+1,len(Distancia)):
@@ -94,7 +95,6 @@ Heuristica = np.full_like(Distancia,fill_value=1/Distancia,dtype=float)
 np.fill_diagonal(Heuristica,0) # OTRA SOLUCION SERÍA RELLENAR LA DIAGONAL CON 1 O -1??
 solucionMejor = np.arange(0,coordenadas.shape[0])
 np.random.shuffle(solucionMejor)
-print(solucionMejor)
 solucionMejorCosto = solucionCalculaCosto(numCiudades,solucionMejor,Distancia)
 Tij0 = 1/(numCiudades*solucionMejorCosto)
 matrizFeromona = np.full_like(Distancia,fill_value=Tij0,dtype=float)
@@ -104,38 +104,47 @@ matrizFeromona = np.full_like(Distancia,fill_value=Tij0,dtype=float)
 num_iteraciones = 0
 index_mejor_solucion = -1
 
+
+
+        
+
 while num_iteraciones < iteraciones or solucionMejorCosto == 7544.3659:
    trayectoriahormiga,ciudadesVisitadas = visitaInicial(hormigas_size,numCiudades)
    
-   #print(ciudadesVisitadas)
-   for i in range(0,numCiudades-1 ):
+   for i in range(0,numCiudades-1):
       for j in range(0,hormigas_size):
          prob_ecuacion_1 = random_0_to_1()
-         TxN = ciudadesVisitadas[j] * matrizFeromona[j] * Heuristica[j]**peso_heuristica
-         indexVisitado = 0   
+
+         TxN = ciudadesVisitadas[j] * matrizFeromona[i] * Heuristica[i]**peso_heuristica
+       
+         indexVisitado = 0
          if (prob_ecuacion_1 < prob_limite):
             indexVisitado = np.random.choice(np.where(TxN == np.amax(TxN))[0])
-            ciudadesVisitadas[j][indexVisitado] = 0
+            ciudadesVisitadas[j][indexVisitado] = 0            
             trayectoriahormiga[j][i+1] = indexVisitado
+            
          else:
             ciudadesRestantes = ciudadesVisitadas[j]
-            if(ciudadesRestantes[np.where(ciudadesRestantes == 1)].size > 0 and np.sum(TxN) > 0):
+            if(ciudadesRestantes[np.where(ciudadesRestantes == 1)].size > 0 and i < numCiudades-2):
+            # if(ciudadesRestantes[np.where(ciudadesRestantes == 1)].size > 0 ):
                j0 = (TxN)/np.sum(TxN)
                arrayTorneos = arrayTorneo(j0,numCiudades)
                random = random_0_to_1()
                indexVisitado = getIndexTorneo(random, arrayTorneos)
                trayectoriahormiga[j][i+1] = indexVisitado
-               ciudadesVisitadas[j][indexVisitado] = 0   
+               ciudadesVisitadas[j][indexVisitado] = 0  
             elif(ciudadesRestantes[np.where(ciudadesRestantes == 1)].size > 0):
                indexVisitado = np.where(ciudadesRestantes==1)[0][0]
                trayectoriahormiga[j][i+1] = indexVisitado
                ciudadesVisitadas[j][indexVisitado] = 0   
-               
-         matrizFeromona[j][indexVisitado] = (1-factor_feromona)*matrizFeromona[j][indexVisitado] + factor_feromona * Tij0
-         matrizFeromona[indexVisitado][j] = matrizFeromona[j][indexVisitado]
-      matrizFeromona[j][-1] = (1-factor_feromona)*matrizFeromona[j][indexVisitado] + factor_feromona * Tij0
-      matrizFeromona[j][0] = (1-factor_feromona)*matrizFeromona[j][indexVisitado] + factor_feromona * Tij0  
-      
+            
+       
+         
+         matrizFeromona[i][indexVisitado] = (1-factor_feromona)*matrizFeromona[i][indexVisitado] + factor_feromona * Tij0
+         matrizFeromona[indexVisitado][i] = matrizFeromona[i][indexVisitado]
+      matrizFeromona[i][-1] = (1-factor_feromona)*matrizFeromona[i][indexVisitado] + factor_feromona * Tij0
+      matrizFeromona[i][0] = (1-factor_feromona)*matrizFeromona[i][indexVisitado] + factor_feromona * Tij0  
+   
    
    for k in range(0,len(trayectoriahormiga)):
       aux = solucionCalculaCosto(numCiudades,trayectoriahormiga[k],Distancia)
@@ -144,23 +153,18 @@ while num_iteraciones < iteraciones or solucionMejorCosto == 7544.3659:
          Tij0 = 1/(numCiudades*solucionMejorCosto)
          index_mejor_solucion = k
          solucionMejor = trayectoriahormiga[k]  
+   
   
-   for l in (solucionMejor):
-      matrizFeromona[index_mejor_solucion][l] = (1-factor_feromona)*matrizFeromona[index_mejor_solucion][l] + factor_feromona * (1/solucionMejorCosto)
-      matrizFeromona[l][index_mejor_solucion] = matrizFeromona[index_mejor_solucion][l]
+   for l in range(0,len(solucionMejor)-1):
+      matrizFeromona[solucionMejor[l]][solucionMejor[l+1]] = (1-factor_feromona)*matrizFeromona[solucionMejor[l]][solucionMejor[l+1]] + factor_feromona * (1/solucionMejorCosto)
+   
 
    num_iteraciones += 1
    print("mejor ", solucionMejorCosto , " i ", num_iteraciones)
    
-
-   
-
-
 #  print(ciudadvisitada)
-# print(trayectoriahormiga)
+   # print(trayectoriahormiga)
 
 
-
-print(matrizFeromona[45])
 
 
