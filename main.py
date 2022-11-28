@@ -61,7 +61,7 @@ def getIndexTorneo(random, arrayProbCruza):
 archivo_entrada = 'berlin.txt'
 seed = 7
 hormigas_size = 50
-iteraciones = 1000
+iteraciones = 20
 factor_feromona = 0.1
 peso_heuristica =  2.5
 prob_limite = 0.9 #q_0
@@ -164,6 +164,19 @@ while num_iteraciones < iteraciones or solucionMejorCosto == 7544.3659:
    
 #  print(ciudadvisitada)
    # print(trayectoriahormiga)
+
+# Dabrir documento
+
+file = open("dato.txt", "w+")
+
+# Guardar mejor solucio y trayectoria
+content = str(solucionMejorCosto)
+solucionMejor = str(solucionMejor)
+file.write("Mejor costo encontrado \n")
+file.write(content+"\n")
+file.write("Mejor trayectoria\n")
+file.write(solucionMejor)
+file.close()
 
 
 
