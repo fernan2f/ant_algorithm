@@ -24,8 +24,8 @@ Los parámetros de entradas serán de tipo:
 * Cantidad hormigas : Numero de hormigas que realizan la búsqueda de su objetivo de tipo `entero`
 * Iteraciones :  Variable de tipo `entero` del número de siglos que se representa cuando la hormiga logran su objetivo
 * Factor evaporación feromona : Variable que nos da el factor de evaporación de la feromona, es de tipo `decimal` entre 0 y 1
-* Peso heurística : 
-* Probabilidad del límite : 
+* Peso heurística : Es el peso del valor de la heurística.
+* Probabilidad del límite : Es un valor de probabilidad límite predefinido mayor o igual que 0 y menor o igual que 1.
 
  
 
